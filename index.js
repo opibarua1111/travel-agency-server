@@ -22,7 +22,7 @@ async function run() {
         await client.connect();
         const database = client.db("Travel_Agency_Portal");
         const servicesCollection = database.collection("services");
-        const reviewsCollection = database.collection("reviews");
+        const blogsCollection = database.collection("blogs");
         const usersCollection = database.collection("users");
 
         // get services data
@@ -65,6 +65,21 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await servicesCollection.deleteOne(query);
+            res.json(result);
+        });
+        // get blogs data
+        app.get("/blogs", async (req, res) => {
+            const cursor = blogsCollection.find({});
+            const blogs = await cursor.toArray();
+            res.send({
+                blogs
+            });
+        });
+        // post blog data
+
+        app.post("/blog", async (req, res) => {
+            const blog = req.body;
+            const result = await blogsCollection.insertOne(blog);
             res.json(result);
         });
         // get user data
